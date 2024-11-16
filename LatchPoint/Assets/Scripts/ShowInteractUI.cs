@@ -41,7 +41,7 @@ public class ShowInteractUI : MonoBehaviour
                 // Call the MoveDoorUp() method from the OpenDoor script
                 if (UseOpenDoor)
                 {
-                    StartCoroutine(openDoorScript.MoveDoorUp());
+                    openDoorScript.MoveDoorUp();
                 }
 
                 // Optional: Destroy this GameObject
