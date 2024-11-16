@@ -18,7 +18,10 @@ public class ShowInteractUI : MonoBehaviour
 
     private void Start()
     {
-        openDoorScript = GameObject.FindGameObjectWithTag("Door").GetComponent<OpenDoor>();
+        if (UseOpenDoor)
+        {
+            openDoorScript = GameObject.FindGameObjectWithTag("Door").GetComponent<OpenDoor>();
+        }
     }
     void Update()
     {
