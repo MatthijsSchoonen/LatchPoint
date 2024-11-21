@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class LaserHit : MonoBehaviour
 {
+    private Respawn respawn;
+    private void Start()
+    {
+        respawn  = GameObject.FindGameObjectWithTag("Logic").GetComponent<Respawn>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
         {
-            Debug.Log("died");
-            //trigger respawn ui
-            //destroy player
+            respawn.Died();       
         }
     }
 }

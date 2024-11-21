@@ -29,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     [Header("KeyBinds")]
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
 
+    public bool isAlive = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,7 +40,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovePlayer();
+        if (isAlive)
+        {
+            MovePlayer();
+        }
     }
 
     // Update is called once per frame

@@ -5,8 +5,8 @@ public class LaserController : MonoBehaviour
     private LineRenderer lineRenderer;
     private BoxCollider boxCollider;
 
-    public LayerMask detectableLayers; // Layers the laser can detect
-    private bool hasHitObject = false;
+    public LayerMask detectableLayers; 
+    private bool hasHitObject;
 
 
     private Vector3 startPoint;
@@ -32,6 +32,7 @@ public class LaserController : MonoBehaviour
         colliderObject.transform.localPosition = Vector3.zero;
         startPoint = gameObject.transform.position;
         DrawLaser();
+        hasHitObject = false;
     }
 
 
