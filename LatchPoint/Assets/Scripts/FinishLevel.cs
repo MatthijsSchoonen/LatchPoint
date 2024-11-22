@@ -19,6 +19,6 @@ public class FinishLevel : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        SceneManager.LoadScene("SampleScene2");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
