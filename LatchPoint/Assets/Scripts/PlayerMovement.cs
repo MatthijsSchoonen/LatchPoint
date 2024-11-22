@@ -7,9 +7,11 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float moveSpeed;
 
+
     [SerializeField] private float jumpForce;
     [SerializeField] private float jumpCooldown;
     [SerializeField] private float airMultiplier;
+    [SerializeField] private Respawn respawn;
     bool readyToJump = true;
 
     [SerializeField] private float playerHeigth;
@@ -36,6 +38,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        respawn = GameObject.FindGameObjectWithTag("Logic").GetComponent<Respawn>();
     }
 
     private void FixedUpdate()
@@ -43,6 +46,11 @@ public class PlayerMovement : MonoBehaviour
         if (isAlive)
         {
             MovePlayer();
+        }
+
+        if (transform.position.y < -50) { 
+            isAlive = false;
+            respawn.Died();
         }
     }
 
