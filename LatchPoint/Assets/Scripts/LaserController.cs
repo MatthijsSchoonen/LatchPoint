@@ -31,6 +31,7 @@ public class LaserController : MonoBehaviour
         boxCollider.isTrigger = true;
         colliderObject.transform.localPosition = Vector3.zero;
         startPoint = gameObject.transform.position;
+
         DrawLaser();
         hasHitObject = false;
     }

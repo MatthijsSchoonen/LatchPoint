@@ -18,7 +18,7 @@ public class LoadLevelSelect : MonoBehaviour
     public void ToLevelSelect()
     {
         levelSelect.SetActive(true);
-        StartMenu.SetActive(true);
+        StartMenu.SetActive(false);
     }
 
     public void StarLevel()
