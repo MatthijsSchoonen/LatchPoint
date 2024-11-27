@@ -31,6 +31,7 @@ public class Respawn : MonoBehaviour
 
     public void RespawnFunction()
     {
+        print("respawn");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
    
