@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class FinishLevel : MonoBehaviour
 {
     // Start is called before the first frame update
+    [SerializeField] private string nextLevel;
     void Start()
     {
         
@@ -19,6 +20,8 @@ public class FinishLevel : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene(nextLevel);
     }
 }

@@ -9,6 +9,7 @@ public class LoadLevelSelect : MonoBehaviour
     [SerializeField] private GameObject levelSelect;
     [SerializeField] private GameObject StartMenu;
 
+  
     public void Back()
     {
         levelSelect.SetActive(false);
@@ -18,12 +19,12 @@ public class LoadLevelSelect : MonoBehaviour
     public void ToLevelSelect()
     {
         levelSelect.SetActive(true);
-        StartMenu.SetActive(false);
+        StartMenu.SetActive(false);  
     }
 
     public void StarLevel()
     {
-        SceneManager.LoadScene("SampleScene2");
+        SceneManager.LoadScene("TestLevel1");
     }
     public void QuitGameApplication()
     {
