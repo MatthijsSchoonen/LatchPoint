@@ -19,12 +19,28 @@ public class LoadLevelSelect : MonoBehaviour
     public void ToLevelSelect()
     {
         levelSelect.SetActive(true);
-        StartMenu.SetActive(false);  
+        StartMenu.SetActive(false);
     }
 
     public void StarLevel()
     {
         SceneManager.LoadScene("TestLevel1");
+    }
+
+
+    public void StartLevel1()
+    {
+        SceneManager.LoadScene("TestLevel1");
+    }
+
+    public void StartLevel2()
+    {
+        SceneManager.LoadScene("TestLevel2");
+    }
+
+    public void StartLevel3()
+    {
+        SceneManager.LoadScene("TestLevel3");
     }
     public void QuitGameApplication()
     {
