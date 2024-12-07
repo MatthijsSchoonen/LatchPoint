@@ -11,7 +11,7 @@ public class GrapplingGun : MonoBehaviour
     public Transform gunTip;
     public Transform cam;
     public Transform player;
-    [SerializeField] private float maxDistance = 100f;
+    [SerializeField] private float maxDistance = 8f;
     private SpringJoint joint;
     [SerializeField] private PlayerMovement playerMovement;
 
