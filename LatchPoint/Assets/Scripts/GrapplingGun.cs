@@ -21,6 +21,12 @@ public class GrapplingGun : MonoBehaviour
     private FiringMode currentMode = FiringMode.Swing;
 
 
+    private GameObject zipline; // The zipline GameObject
+    private Transform pos1, pos2; // Endpoints of the zipline
+    private bool ziplineReady = false; // Whether the zipline is ready for use
+    private bool onZipline = false; // Whether the player is on the zipline
+
+
     private GameObject pulledObject; // Reference to the pulled object
     private SpringJoint objectSpringJoint; // SpringJoint for the object
 
@@ -42,6 +48,17 @@ public class GrapplingGun : MonoBehaviour
         {
             StopGrapple();
         }
+        if (currentMode == FiringMode.Zipline)
+        {
+            HandleZiplineActions();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && zipline != null)
+        {
+            PickupZipline();
+        }
+
+
     }
 
     private void LateUpdate()
@@ -52,7 +69,10 @@ public class GrapplingGun : MonoBehaviour
             objectSpringJoint.connectedAnchor = gunTip.position;
         }
 
-        DrawRope();
+        if (currentMode != FiringMode.Zipline)
+        {
+            DrawRope();
+        }
     }
 
 
@@ -75,7 +95,7 @@ public class GrapplingGun : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha4)) currentMode = FiringMode.Connect;
         if (Input.GetKeyDown(KeyCode.Alpha5)) currentMode = FiringMode.Fire;
 
-        Debug.Log("Current Mode: " + currentMode); // Debugging to see the active mode
+       
     }
 
     private void HandleGrappleAction()
@@ -156,6 +176,119 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
+    private void HandleZiplineActions()
+    {
+        if (Input.GetMouseButton(0)) // Forward direction (left click)
+        {
+            AttachZiplineEndpoint(ref pos2, true); // True = Forward
+        }
+
+        if (Input.GetMouseButton(1)) // Backward direction (right click)
+        {
+            AttachZiplineEndpoint(ref pos1, false); // False = Backward
+        }
+
+        if (Input.GetKeyDown(KeyCode.E) && ziplineReady && pos1 != null && pos2 != null)
+        {
+            StartZipline();
+        }
+    }
+
+
+    private void AttachZiplineEndpoint(ref Transform pos, bool isForward)
+    {
+        Vector3 direction = isForward ? cam.forward : -cam.forward; // Determine the direction
+        RaycastHit hit;
+
+        if (Physics.Raycast(cam.position, direction, out hit, maxDistance))
+        {
+            if (pos == null)
+            {
+                if (zipline == null)
+                {
+                    // Create the zipline GameObject
+                    zipline = new GameObject("Zipline");
+                    LineRenderer ziplineRenderer = zipline.AddComponent<LineRenderer>();
+                    ziplineRenderer.startWidth = 0.1f;
+                    ziplineRenderer.endWidth = 0.1f;
+                    ziplineRenderer.positionCount = 2;
+
+                    // Create pos1 and pos2 as child objects
+                    pos1 = new GameObject("Pos1").transform;
+                    pos2 = new GameObject("Pos2").transform;
+                    pos1.parent = zipline.transform;
+                    pos2.parent = zipline.transform;
+                }
+
+                // Assign or update the zipline endpoint
+                pos = new GameObject("ZiplinePoint").transform;
+                pos.position = hit.point;
+                pos.parent = zipline.transform;
+
+                CheckZiplineReady();
+            }
+            else
+            {
+                // Update the position of the existing endpoint
+                pos.position = hit.point;
+                CheckZiplineReady();
+            }
+        }
+    }
+
+
+    private void CheckZiplineReady()
+    {
+        ziplineReady = pos1 != null && pos2 != null;
+        if (ziplineReady)
+        {
+            LineRenderer ziplineRenderer = zipline.GetComponent<LineRenderer>();
+            ziplineRenderer.SetPositions(new Vector3[] { pos1.position, pos2.position });
+        }
+    }
+
+
+    private void StartZipline()
+    {
+        if (onZipline || zipline == null) return;
+
+        StartCoroutine(MoveAlongZipline());
+    }
+
+    private IEnumerator MoveAlongZipline()
+    {
+        onZipline = true;
+
+        // Determine closest point
+        float distanceToPos1 = Vector3.Distance(player.position, pos1.position);
+        float distanceToPos2 = Vector3.Distance(player.position, pos2.position);
+
+        Transform start = distanceToPos1 < distanceToPos2 ? pos1 : pos2;
+        Transform end = start == pos1 ? pos2 : pos1;
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime; // Adjust speed here
+            player.position = Vector3.Lerp(start.position, end.position, t);
+            yield return null;
+        }
+
+        onZipline = false;
+    }
+
+
+    private void PickupZipline()
+    {
+        if (zipline != null)
+        {
+            Destroy(zipline);
+            zipline = null;
+            pos1 = null;
+            pos2 = null;
+            ziplineReady = false;
+        }
+    }
     private void DrawRope()
     {
         if (pulledObject != null && currentMode == FiringMode.Pull)
