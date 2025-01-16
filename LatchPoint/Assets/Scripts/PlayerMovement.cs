@@ -32,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
 
     public bool isAlive = true;
+    public bool isPaused = false;
 
     // Start is called before the first frame update
     void Start()
@@ -43,7 +44,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isAlive)
+        if (isAlive && !isPaused)
         {
             MovePlayer();
         }
@@ -81,7 +82,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         //when to jump
-        if (Input.GetKey(jumpKey) && readyToJump && grounded && isAlive)
+        if (Input.GetKey(jumpKey) && readyToJump && grounded && isAlive && !isPaused)
         {
             readyToJump = false;
             Jump();

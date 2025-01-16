@@ -49,11 +49,11 @@ public class GrapplingGun : MonoBehaviour
     {
         HandleModeSwitch();
 
-        if (Input.GetMouseButtonDown(0) && playerMovement.isAlive)
+        if (Input.GetMouseButtonDown(0) && playerMovement.isAlive && !playerMovement.isPaused)
         {
             HandleGrappleAction();
         }
-        else if (Input.GetMouseButtonUp(0) && playerMovement.isAlive)
+        else if (Input.GetMouseButtonUp(0) && playerMovement.isAlive && !playerMovement.isPaused)
         {
             StopGrapple();
         }

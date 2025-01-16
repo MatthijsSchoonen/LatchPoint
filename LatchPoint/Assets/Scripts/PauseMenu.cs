@@ -10,7 +10,6 @@ public class PauseMenu : MonoBehaviour
     private GameObject pauseMenu;
     private bool pauseMenuActive = false;
     [SerializeField] private PlayerMovement playerMovement;
-    bool pAlive = true;
     void Start()
     {
         
@@ -28,24 +27,20 @@ public class PauseMenu : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            pAlive = playerMovement.isAlive;
-            print("pressed");
+
             pauseMenuActive = !pauseMenuActive;
 
             if (pauseMenuActive)
             {
-                playerMovement.isAlive = false;
+                playerMovement.isPaused = true;
                 pauseMenu.SetActive(true);
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
             else
             {
-                if (pAlive == true)
-                {
-                    playerMovement.isAlive = true;
-                }
-              
+               
+                playerMovement.isPaused = false;
                 pauseMenu.SetActive(false);
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
