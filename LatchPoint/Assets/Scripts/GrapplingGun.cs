@@ -1,8 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class GrapplingGun : MonoBehaviour
 {
@@ -20,15 +19,19 @@ public class GrapplingGun : MonoBehaviour
     private enum FiringMode { Swing, Pull, Zipline, Connect, Fire }
     private FiringMode currentMode = FiringMode.Swing;
 
-
     private GameObject zipline; // The zipline GameObject
     private Transform pos1, pos2; // Endpoints of the zipline
     private bool ziplineReady = false; // Whether the zipline is ready for use
-    private bool onZipline = false; // Whether the player is on the zipline
 
 
     private GameObject pulledObject; // Reference to the pulled object
     private SpringJoint objectSpringJoint; // SpringJoint for the object
+
+    private GameObject ziplineParent;
+    private Transform ziplinePoint1, ziplinePoint2;
+    private BoxCollider ziplineTrigger;
+    private bool ziplineActive = false;
+
 
     private void Awake()
     {
@@ -48,17 +51,13 @@ public class GrapplingGun : MonoBehaviour
         {
             StopGrapple();
         }
-        if (currentMode == FiringMode.Zipline)
-        {
-            HandleZiplineActions();
-        }
+
+     
 
         if (Input.GetKeyDown(KeyCode.F) && zipline != null)
         {
-            PickupZipline();
+            RemoveZipline();
         }
-
-
     }
 
     private void LateUpdate()
@@ -74,7 +73,6 @@ public class GrapplingGun : MonoBehaviour
             DrawRope();
         }
     }
-
 
     // Switch firing modes using scroll wheel or number keys
     private void HandleModeSwitch()
@@ -94,8 +92,6 @@ public class GrapplingGun : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3)) currentMode = FiringMode.Zipline;
         if (Input.GetKeyDown(KeyCode.Alpha4)) currentMode = FiringMode.Connect;
         if (Input.GetKeyDown(KeyCode.Alpha5)) currentMode = FiringMode.Fire;
-
-       
     }
 
     private void HandleGrappleAction()
@@ -109,7 +105,7 @@ public class GrapplingGun : MonoBehaviour
                 StartPull();
                 break;
             case FiringMode.Zipline:
-                Debug.Log("Zipline Mode Action Triggered");
+                FireZipline();
                 break;
             case FiringMode.Connect:
                 Debug.Log("Connect Mode Action Triggered");
@@ -149,11 +145,6 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
-
-
-
-
-
     private void StartGrapple()
     {
         RaycastHit hit;
@@ -176,119 +167,151 @@ public class GrapplingGun : MonoBehaviour
         }
     }
 
-    private void HandleZiplineActions()
+    // Handle zipline logic (left mouse button fires both forward and backward)
+    private void FireZipline()
     {
-        if (Input.GetMouseButton(0)) // Forward direction (left click)
+        if (ziplineActive)
         {
-            AttachZiplineEndpoint(ref pos2, true); // True = Forward
+            return;
         }
 
-        if (Input.GetMouseButton(1)) // Backward direction (right click)
+        RaycastHit hit1, hit2;
+
+        // First point (forward direction)
+        if (Physics.Raycast(cam.position, cam.forward, out hit1, maxDistance))
         {
-            AttachZiplineEndpoint(ref pos1, false); // False = Backward
-        }
+            // Create parent object for the zipline
+            ziplineParent = new GameObject("ZiplineParent");
+            LineRenderer lr = ziplineParent.AddComponent<LineRenderer>();
+            lr.startWidth = 0.1f;
+            lr.endWidth = 0.1f;
+            lr.positionCount = 2;
+            Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
+            lineMaterial.color = Color.black;  // Set the material color to black
+            lr.material = lineMaterial;
 
-        if (Input.GetKeyDown(KeyCode.E) && ziplineReady && pos1 != null && pos2 != null)
-        {
-            StartZipline();
-        }
-    }
+            // Add ZiplineManager to ziplineParent
+            ziplineParent.AddComponent<ZiplineManager>();
 
+            // Create first zipline point
+            ziplinePoint1 = new GameObject("ZiplinePoint1").transform;
+            ziplinePoint1.position = hit1.point;
 
-    private void AttachZiplineEndpoint(ref Transform pos, bool isForward)
-    {
-        Vector3 direction = isForward ? cam.forward : -cam.forward; // Determine the direction
-        RaycastHit hit;
+            // Temporarily unparent to avoid inheritance of parent's position
+            Transform originalParent1 = ziplinePoint1.transform.parent;
+            ziplinePoint1.transform.parent = null; // Temporarily unparent
+            ziplinePoint1.position = hit1.point;  // Set the world position explicitly
+            ziplinePoint1.transform.parent = originalParent1; // Reparent back
 
-        if (Physics.Raycast(cam.position, direction, out hit, maxDistance))
-        {
-            if (pos == null)
+            // Second point (backward direction)
+            if (Physics.Raycast(cam.position, -cam.forward, out hit2, maxDistance))
             {
-                if (zipline == null)
-                {
-                    // Create the zipline GameObject
-                    zipline = new GameObject("Zipline");
-                    LineRenderer ziplineRenderer = zipline.AddComponent<LineRenderer>();
-                    ziplineRenderer.startWidth = 0.1f;
-                    ziplineRenderer.endWidth = 0.1f;
-                    ziplineRenderer.positionCount = 2;
+                // Create second zipline point
+                ziplinePoint2 = new GameObject("ZiplinePoint2").transform;
+                ziplinePoint2.position = hit2.point;
 
-                    // Create pos1 and pos2 as child objects
-                    pos1 = new GameObject("Pos1").transform;
-                    pos2 = new GameObject("Pos2").transform;
-                    pos1.parent = zipline.transform;
-                    pos2.parent = zipline.transform;
-                }
+                // Temporarily unparent to avoid inheritance of parent's position
+                Transform originalParent2 = ziplinePoint2.transform.parent;
+                ziplinePoint2.transform.parent = null; // Temporarily unparent
+                ziplinePoint2.position = hit2.point;  // Set the world position explicitly
+                ziplinePoint2.transform.parent = originalParent2; // Reparent back
 
-                // Assign or update the zipline endpoint
-                pos = new GameObject("ZiplinePoint").transform;
-                pos.position = hit.point;
-                pos.parent = zipline.transform;
+                // Draw the zipline
+                DrawZipline();
 
-                CheckZiplineReady();
+                // Add BoxCollider to enable interaction
+                AddZiplineTrigger();
+
+                ziplineActive = true;
+                Debug.Log("Zipline fired successfully.");
             }
             else
             {
-                // Update the position of the existing endpoint
-                pos.position = hit.point;
-                CheckZiplineReady();
+                Destroy(ziplineParent);
+                Debug.Log("Failed to find a second zipline point.");
             }
+
+            Debug.Log(ziplinePoint1.position);
+            Debug.Log(ziplinePoint2.position);
         }
     }
 
 
-    private void CheckZiplineReady()
+    private void DrawZipline()
     {
-        ziplineReady = pos1 != null && pos2 != null;
-        if (ziplineReady)
+        if (ziplinePoint1 != null && ziplinePoint2 != null && ziplineParent != null)
         {
-            LineRenderer ziplineRenderer = zipline.GetComponent<LineRenderer>();
-            ziplineRenderer.SetPositions(new Vector3[] { pos1.position, pos2.position });
+            LineRenderer lr = ziplineParent.GetComponent<LineRenderer>();
+            lr.SetPosition(0, ziplinePoint1.position);
+            lr.SetPosition(1, ziplinePoint2.position);
+            lr.startColor = Color.black;  // Set the start color of the line
+            lr.endColor = Color.black;    // Set the end color of the line
+        
         }
     }
 
-
-    private void StartZipline()
+    private void AddZiplineTrigger()
     {
-        if (onZipline || zipline == null) return;
-
-        StartCoroutine(MoveAlongZipline());
-    }
-
-    private IEnumerator MoveAlongZipline()
-    {
-        onZipline = true;
-
-        // Determine closest point
-        float distanceToPos1 = Vector3.Distance(player.position, pos1.position);
-        float distanceToPos2 = Vector3.Distance(player.position, pos2.position);
-
-        Transform start = distanceToPos1 < distanceToPos2 ? pos1 : pos2;
-        Transform end = start == pos1 ? pos2 : pos1;
-
-        float t = 0f;
-        while (t < 1f)
+        if (ziplinePoint1 == null || ziplinePoint2 == null || ziplineParent == null)
         {
-            t += Time.deltaTime; // Adjust speed here
-            player.position = Vector3.Lerp(start.position, end.position, t);
-            yield return null;
+            Debug.LogError("Failed to add BoxCollider: Zipline points or parent are missing.");
+            return;
         }
 
-        onZipline = false;
+        // Calculate the center position and direction
+        Vector3 point1 = ziplinePoint1.position;
+        Vector3 point2 = ziplinePoint2.position;
+
+        Vector3 center = (point1 + point2) / 2f; // Midpoint of the zipline
+        Vector3 direction = (point2 - point1).normalized; // Direction from point1 to point2
+        float length = Vector3.Distance(point1, point2); // Distance between the points
+
+        // Add and configure the BoxCollider
+        ziplineTrigger = ziplineParent.AddComponent<BoxCollider>();
+        ziplineTrigger.isTrigger = true;
+
+
+        // Set the BoxCollider size: length along Z, reasonable width and height
+        ziplineTrigger.size = new Vector3(1.3f, 1.3f, length); // Adjust X and Y for thickness if needed
+        ziplineTrigger.center = Vector3.zero;
+
+        // Set position and rotation explicitly in world space
+        ziplineTrigger.transform.position = center;
+        ziplineTrigger.transform.rotation = Quaternion.LookRotation(direction);
+
+        // To prevent rotation issues caused by the parent, unparent the collider temporarily, set it up, and reparent it
+        Transform originalParent = ziplineTrigger.transform.parent;
+        ziplineTrigger.transform.parent = null; // Temporarily unparent to avoid inheriting unwanted rotations
+        ziplineTrigger.transform.position = center;
+        ziplineTrigger.transform.rotation = Quaternion.LookRotation(direction);
+        ziplineTrigger.transform.parent = originalParent; // Reparent after positioning
+
+        Debug.Log($"BoxCollider added: Center={center}, Direction={direction}, Length={length}");
     }
 
 
-    private void PickupZipline()
+
+
+
+    public void RemoveZipline()
     {
-        if (zipline != null)
+        if (ziplineActive && ziplineParent != null)
         {
-            Destroy(zipline);
-            zipline = null;
-            pos1 = null;
-            pos2 = null;
-            ziplineReady = false;
+            Destroy(ziplineParent);
+            ziplineParent = null;
+            ziplinePoint1 = null;
+            ziplinePoint2 = null;
+            ziplineTrigger = null;
+            ziplineActive = false;
+
+            Debug.Log("Zipline removed.");
         }
     }
+
+    public Vector3 GetZiplinePoint1() => ziplinePoint1.position;
+    public Vector3 GetZiplinePoint2() => ziplinePoint2.position;
+    public bool IsZiplineActive() => ziplineActive;
+
     private void DrawRope()
     {
         if (pulledObject != null && currentMode == FiringMode.Pull)
