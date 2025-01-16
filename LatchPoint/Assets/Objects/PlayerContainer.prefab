@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6226964287086304865}
   m_Layer: 0
   m_Name: GunPosition
-  m_TagString: Untagged
+  m_TagString: gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 8866225764160949976}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -257,6 +257,9 @@ MonoBehaviour:
   player: {fileID: 1134271392337374030}
   maxDistance: 100
   playerMovement: {fileID: 6592155287926618164}
+  projectilePrefab: {fileID: 598934431565373650, guid: debfedf9414771f44917c0022b9aac1c, type: 3}
+  fireForce: 500
+  ammo: 3
 --- !u!1 &1956700296064653649
 GameObject:
   m_ObjectHideFlags: 0

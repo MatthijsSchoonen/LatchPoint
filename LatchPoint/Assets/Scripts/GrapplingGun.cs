@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using UnityEngine;
 
 public class GrapplingGun : MonoBehaviour
@@ -32,6 +33,11 @@ public class GrapplingGun : MonoBehaviour
     private BoxCollider ziplineTrigger;
     private bool ziplineActive = false;
 
+
+    //firemode
+    [SerializeField]  private GameObject projectilePrefab;  // Reference to the projectile prefab
+    [SerializeField]  private float fireForce = 5000f;  // Force applied to fire the projectile
+    [SerializeField]  private int ammo = 3;
 
     private void Awake()
     {
@@ -111,10 +117,79 @@ public class GrapplingGun : MonoBehaviour
                 Debug.Log("Connect Mode Action Triggered");
                 break;
             case FiringMode.Fire:
-                Debug.Log("Fire Mode Action Triggered");
+                FireProjectile();
                 break;
         }
     }
+
+    private void FireProjectile()
+    {
+        if (projectilePrefab != null)
+        {
+            
+            if (ammo == 0) { return; }
+            // Cast a ray from the camera to the point where the crosshair is aiming
+            RaycastHit hit;
+            if (Physics.Raycast(cam.position, cam.forward, out hit, maxDistance))
+            {
+                // Get the point where the ray hit
+                Vector3 targetPoint = hit.point;
+
+                // Instantiate the projectile at the gun tip's position and keep the rotation of the gun tip
+                GameObject projectile = Instantiate(projectilePrefab, gunTip.position, gunTip.rotation);
+
+
+                // Get the Rigidbody component
+                Rigidbody rb = projectile.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    // Calculate the direction from the gun to the target point
+                    Vector3 directionToTarget = (targetPoint - gunTip.position).normalized;
+
+                    // Apply force in the direction of the target point (towards the crosshair)
+                    rb.AddForce(directionToTarget * fireForce, ForceMode.Force);
+                }
+
+                // Adjust the projectile's rotation to face the target
+
+                float cameraYRotation = cam.eulerAngles.y;
+
+                // Adjust the projectile's rotation based on the camera's Y rotation + 90 degrees
+                // Here we are modifying the rotation to match the camera's facing direction and adding 90 degrees to it
+                projectile.transform.rotation = Quaternion.Euler(0f, cameraYRotation + 90f, 90f);
+
+                Debug.Log("Projectile Fired!");
+                ammo--;
+                Debug.Log("Ammo remaining: " + ammo);
+            }
+            else
+            {
+                // If no valid target is hit by the raycast, you can still fire in the direction the camera is facing
+                GameObject projectile = Instantiate(projectilePrefab, gunTip.position, gunTip.rotation);
+                Rigidbody rb = projectile.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.AddForce(cam.forward * fireForce, ForceMode.Force);
+
+                    float cameraYRotation = cam.eulerAngles.y;
+
+                    // Adjust the projectile's rotation based on the camera's Y rotation + 90 degrees
+                    // Here we are modifying the rotation to match the camera's facing direction and adding 90 degrees to it
+                    projectile.transform.rotation = Quaternion.Euler(0f, cameraYRotation + 90f, 90f);
+                }
+                // Decrease ammo after firing
+                ammo--;
+                Debug.Log("Ammo remaining: " + ammo);
+            }
+        }
+    }
+
+    public void IncreaseAmmo()
+    {
+        ammo++;
+        Debug.Log("Ammo increased: " + ammo);
+    }
+
 
     private void StartPull()
     {

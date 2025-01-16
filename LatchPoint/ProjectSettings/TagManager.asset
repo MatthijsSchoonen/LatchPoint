@@ -9,6 +9,9 @@ TagManager:
   - PressurePlate
   - Logic
   - PauseMenu
+  - Orientation
+  - Pipe
+  - gun
   layers:
   - Default
   - TransparentFX
