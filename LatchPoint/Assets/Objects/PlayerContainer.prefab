@@ -255,11 +255,15 @@ MonoBehaviour:
   gunTip: {fileID: 8986478003984740193}
   cam: {fileID: 4245496512495085333}
   player: {fileID: 1134271392337374030}
-  maxDistance: 100
+  maxDistance: 20
   playerMovement: {fileID: 6592155287926618164}
   projectilePrefab: {fileID: 598934431565373650, guid: debfedf9414771f44917c0022b9aac1c, type: 3}
   fireForce: 500
   ammo: 3
+  PullModeEnabled: 0
+  ZiplineModeEnabled: 0
+  ConnectModeEnabled: 0
+  FireModeEnabled: 0
 --- !u!1 &1956700296064653649
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,7 +337,6 @@ GameObject:
   - component: {fileID: 1134271392337374030}
   - component: {fileID: 6040561616608392072}
   - component: {fileID: 6592155287926618164}
-  - component: {fileID: 3686498691389324933}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -411,6 +414,7 @@ MonoBehaviour:
   orientation: {fileID: 4599276783214621252}
   jumpKey: 32
   isAlive: 1
+  isPaused: 0
 --- !u!1 &3577767912404270202
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,7 +506,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 4650571389427886523}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3577767912404270202}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 3847a8f6928fcbd418f69c3eed078c47, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -594,6 +598,7 @@ GameObject:
   - component: {fileID: 4833657758254143527}
   - component: {fileID: 1759976691768261228}
   - component: {fileID: 1329620358865894754}
+  - component: {fileID: 3998815886469443873}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: MainCamera
@@ -1018,24 +1023,8 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 243521814717446831, guid: 4a3e681c1116ddf4e8a34f1fa8039c2f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3686498691389324933}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a3e681c1116ddf4e8a34f1fa8039c2f, type: 3}
---- !u!114 &3686498691389324933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2072384616994824387}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 868d10eada8fb224eb3a31d507e07d5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerMovement: {fileID: 6592155287926618164}
 --- !u!1001 &8298298157423451361
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1102,5 +1091,70 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5573340400029851523, guid: b0b75a20a0229cd40ad8524b7d4805aa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9174210540459248196}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8238615298090600662, guid: b0b75a20a0229cd40ad8524b7d4805aa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3998815886469443873}
   m_SourcePrefab: {fileID: 100100000, guid: b0b75a20a0229cd40ad8524b7d4805aa, type: 3}
+--- !u!108 &3998815886469443873
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4867865850193233333}
+  m_Enabled: 1
+  serializedVersion: 10
+  m_Type: 0
+  m_Shape: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_InnerSpotAngle: 21.80208
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+    m_CullingMatrixOverride:
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
+    m_UseCullingMatrixOverride: 0
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingLayerMask: 1
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0

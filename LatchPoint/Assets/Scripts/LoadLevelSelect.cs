@@ -24,23 +24,28 @@ public class LoadLevelSelect : MonoBehaviour
 
     public void StarLevel()
     {
-        SceneManager.LoadScene("TestLevel1");
+        SceneManager.LoadScene("Level1Alpha");
     }
 
 
     public void StartLevel1()
     {
-        SceneManager.LoadScene("TestLevel1");
+        SceneManager.LoadScene("Level1Alpha");
     }
 
     public void StartLevel2()
     {
-        SceneManager.LoadScene("TestLevel2");
+        SceneManager.LoadScene("Level2Alpha");
     }
 
     public void StartLevel3()
     {
-        SceneManager.LoadScene("TestLevel3");
+        SceneManager.LoadScene("Level3Alpha");
+    }
+
+    public void StartLevel4()
+    {
+        SceneManager.LoadScene("Level4Alpha");
     }
     public void QuitGameApplication()
     {

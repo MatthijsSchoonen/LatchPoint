@@ -12,7 +12,7 @@ public class ZiplineManager : MonoBehaviour
     private bool nearby = false;
     GrapplingGun grapplingGun;
 
-    public float traverseSpeed = 10f;
+    public float traverseSpeed = 20f;
     private Transform playerOrientation; // Player's orientation (found by tag)
 
     private void Start()

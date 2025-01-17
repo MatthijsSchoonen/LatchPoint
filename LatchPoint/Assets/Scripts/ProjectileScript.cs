@@ -10,7 +10,7 @@ public class ProjectileScript : MonoBehaviour
     {
         GrapplingGun = GameObject.FindGameObjectWithTag("gun").GetComponent<GrapplingGun>();
         // Destroy the projectile after a set time
-        Destroy(gameObject, 1000f);
+        Destroy(gameObject,10f);
     }
 
 

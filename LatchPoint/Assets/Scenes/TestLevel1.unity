@@ -122,17 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &10865754 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9102868617941266485, guid: cf86a5d6519dd3a45bdb3e3b71e20f63, type: 3}
-  m_PrefabInstance: {fileID: 827516569}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 868d10eada8fb224eb3a31d507e07d5a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &144460982
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,7 +495,7 @@ PrefabInstance:
     - target: {fileID: 5764499659407546624, guid: cf86a5d6519dd3a45bdb3e3b71e20f63, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 10865754}
+      objectReference: {fileID: 2070393520}
     - target: {fileID: 5764499659407546624, guid: cf86a5d6519dd3a45bdb3e3b71e20f63, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ReturnHome
@@ -1450,6 +1439,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7239874862105374375, guid: 00996bb3460e04b4095a3cc3642d7c57, type: 3}
+      propertyPath: playerMovement
+      value: 
+      objectReference: {fileID: 1206425213}
     - target: {fileID: 7754915865038955045, guid: 00996bb3460e04b4095a3cc3642d7c57, type: 3}
       propertyPath: m_Name
       value: Logic
@@ -1468,6 +1461,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cf0ac2c7e215f941b37a86180ac1c0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2070393520 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7239874862105374375, guid: 00996bb3460e04b4095a3cc3642d7c57, type: 3}
+  m_PrefabInstance: {fileID: 2070393518}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868d10eada8fb224eb3a31d507e07d5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2113228707

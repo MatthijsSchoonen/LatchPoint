@@ -12,6 +12,7 @@ TagManager:
   - Orientation
   - Pipe
   - gun
+  - Enemy
   layers:
   - Default
   - TransparentFX

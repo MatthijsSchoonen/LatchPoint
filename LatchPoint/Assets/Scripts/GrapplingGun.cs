@@ -12,7 +12,7 @@ public class GrapplingGun : MonoBehaviour
     public Transform gunTip;
     public Transform cam;
     public Transform player;
-    [SerializeField] private float maxDistance = 8f;
+    [SerializeField] private float maxDistance = 0.5f;
     private SpringJoint joint;
     [SerializeField] private PlayerMovement playerMovement;
 
@@ -39,6 +39,12 @@ public class GrapplingGun : MonoBehaviour
     [SerializeField]  private float fireForce = 5000f;  // Force applied to fire the projectile
     [SerializeField]  private int ammo = 3;
 
+
+
+    [SerializeField] private bool PullModeEnabled = false;
+    [SerializeField] private bool ZiplineModeEnabled = false ;
+    [SerializeField] private bool ConnectModeEnabled = false ;
+    [SerializeField] private bool FireModeEnabled = false ;
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
@@ -108,15 +114,18 @@ public class GrapplingGun : MonoBehaviour
                 StartGrapple();
                 break;
             case FiringMode.Pull:
+                if(PullModeEnabled)
                 StartPull();
                 break;
             case FiringMode.Zipline:
+                if(ZiplineModeEnabled)
                 FireZipline();
                 break;
             case FiringMode.Connect:
                 Debug.Log("Connect Mode Action Triggered");
                 break;
             case FiringMode.Fire:
+                if(FireModeEnabled)
                 FireProjectile();
                 break;
         }
@@ -253,7 +262,7 @@ public class GrapplingGun : MonoBehaviour
         RaycastHit hit1, hit2;
 
         // First point (forward direction)
-        if (Physics.Raycast(cam.position, cam.forward, out hit1, maxDistance))
+        if (Physics.Raycast(cam.position, cam.forward, out hit1, 100f))
         {
             // Create parent object for the zipline
             ziplineParent = new GameObject("ZiplineParent");

@@ -14,7 +14,10 @@ public class PauseMenu : MonoBehaviour
     {
         
         pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu").gameObject;
-        pauseMenu.SetActive(false);
+        if (pauseMenu != null)
+        {
+            pauseMenu.SetActive(false);
+        }
         
     }
 

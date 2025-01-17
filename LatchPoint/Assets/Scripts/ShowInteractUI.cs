@@ -45,10 +45,11 @@ public class ShowInteractUI : MonoBehaviour
                 if (UseOpenDoor)
                 {
                     openDoorScript.MoveDoorUp();
+                    // Optional: Destroy this GameObject
+                    Destroy(gameObject);
                 }
 
-                // Optional: Destroy this GameObject
-                Destroy(gameObject);
+
             }
         }
     }

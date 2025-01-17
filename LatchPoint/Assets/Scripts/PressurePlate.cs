@@ -32,7 +32,7 @@ public class PressurePlate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Object"))
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Object") || other.gameObject.CompareTag("Pipe"))
         {
             if (objectsEntered == 0) // First object enters
             {
@@ -51,7 +51,7 @@ public class PressurePlate : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Object"))
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Object")|| other.gameObject.CompareTag("Pipe"))
         {
             objectsEntered--;
             if (objectsEntered == 0) // Last object leaves
